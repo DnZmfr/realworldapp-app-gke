@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  labels:
+    app: mongodb
+spec:
+  type: NodePort
+  ports:
+   - port: 5432
+  selector:
+   app: mongodb
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  labels:
+    app: mongodb
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - image: mongo:4
+        imagePullPolicy: Always
+        name: mongodb
+        ports:
+        - containerPort: 27017
+          protocol: TCP
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: "test"
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-passwd
+              key: DB_PASSWORD
+        volumeMounts:
+        - name: mongodb-data-volume
+          mountPath: /data/db
+        - name: mongodb-init-volume
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: mongodb-data-volume
+        persistentVolumeClaim:
+          claimName: mongodb-volume-claim
+      - configMap:
+          name: mongodb-configmap
+        name: mongodb-init-volume
