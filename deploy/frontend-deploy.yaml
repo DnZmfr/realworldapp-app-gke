@@ -39,14 +39,18 @@ spec:
         ports:
         - containerPort: 3002
           protocol: TCP
-          #readinessProbe:
+        readinessProbe:
+          tcpSocket:
+            port: 3002
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 3002
+          initialDelaySeconds: 15
+          periodSeconds: 20
         env:
         - name: BACKEND_URL
           value: "http://realworld-backend.default.svc.cluster.local:3001"
         - name: FRONTEND_URL
           value: "http://realworld-frontend.default.svc.cluster.local:3002"
-        - name: JWT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: jwt-secret
-              key: JWT_SECRET
