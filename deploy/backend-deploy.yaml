@@ -5,9 +5,10 @@ metadata:
   labels:
     app: realworld-backend
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
-    - port: 3001
+    - protocol: TCP
+      port: 3001
   selector:
     app: realworld-backend
 ---
@@ -51,7 +52,7 @@ spec:
           periodSeconds: 20
         env:
         - name: BACKEND_URL
-          value: "http://localhost:3001"
+          value: "http://realworld-backend.default.svc.cluster.local:3001"
         - name: MONGODB_STORE_CONNECTION_STRING
           value: "mongodb://test:test@mongodb.default.svc.cluster.local:27017/test"
         - name: JWT_SECRET

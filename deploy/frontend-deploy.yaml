@@ -7,8 +7,9 @@ spec:
     app: realworld-frontend
   type: LoadBalancer
   ports:
-   -  protocol: TCP
-      port: 3002
+    - protocol: TCP
+      port: 80
+      targetPort: 3002
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -38,18 +39,14 @@ spec:
         ports:
         - containerPort: 3002
           protocol: TCP
-        readinessProbe:
-          tcpSocket:
-            port: 3002
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        livenessProbe:
-          tcpSocket:
-            port: 3002
-          initialDelaySeconds: 15
-          periodSeconds: 20
+          #readinessProbe:
         env:
         - name: BACKEND_URL
           value: "http://realworld-backend.default.svc.cluster.local:3001"
         - name: FRONTEND_URL
-          value: "http://localhost:3002"
+          value: "http://realworld-frontend.default.svc.cluster.local:3002"
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt-secret
+              key: JWT_SECRET
