@@ -30,7 +30,7 @@ boldn "Create jwt-secret secret..."
 CHECK_JWT_SECRET=$(kubectl get secret| grep jwt-secret| wc -l)
 if [ ${CHECK_JWT_SECRET} -eq 0 ]; then
   export JWT_SECRET=$(openssl rand -hex 64)
-  sed -i "s/JWT_SECRET=.*/JWT_SECRET=$JWT_SECRET/g" backend/Dockerfile
+  sed -i "s/JWT_SECRET=.*/JWT_SECRET=$JWT_SECRET/g" ../backend/Dockerfile
   kubectl create secret generic jwt-secret --from-literal=JWT_SECRET=${JWT_SECRET}
   bold "Done."
 else
