@@ -17,7 +17,6 @@ metadata:
   name: mongodb
   labels:
     app: mongodb
-  namespace: default
 spec:
   replicas: 1
   selector:
