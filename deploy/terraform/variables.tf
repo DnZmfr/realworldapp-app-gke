@@ -23,9 +23,9 @@ variable "region" {
   description = "The region to host the cluster in"
 }
 
-variable "zone" {
-  type        = string
-  description = "The zone to host the cluster in"
+variable "zones" {
+  type        = list(string)
+  description = "The zones to host the cluster in"
 }
 
 variable "network" {
@@ -46,4 +46,18 @@ variable "ip_range_pods_name" {
 variable "ip_range_services_name" {
   type        = string
   description = "The secondary ip range to use for services"
+}
+
+variable "node_pools" {
+  type = object({
+    pool_name          = string
+    machine_type       = string
+    node_locations     = string
+    min_count          = number
+    max_count          = number
+    disk_size_gb       = number
+    disk_type          = string
+    initial_node_count = number
+  })
+  description = "Node pools configuration"
 }
