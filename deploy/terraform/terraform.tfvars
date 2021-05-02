@@ -1,0 +1,10 @@
+credentials            = "~/.google/realworld-tf-gke.json"
+project_id             = "toptal-realworld-app"
+cluster_name           = "realworld-cluster"
+regional               = true
+region                 = "us-central1"
+zone                   = "us-central1-c"
+network                = "realworld-network"
+subnetwork             = "realworld-subnet"
+ip_range_pods_name     = "ip-range-pods"
+ip_range_services_name = "ip-range-services"
