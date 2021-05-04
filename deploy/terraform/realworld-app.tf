@@ -390,7 +390,7 @@ resource "kubernetes_deployment" "realworld_frontend" {
 
           env {
             name  = "BACKEND_URL"
-            value = "http://${kubernetes_service.realworld_backend.status.0.load_balancer.0.ingress.0.ip}:3001"
+            value = "http://${kubernetes_service.realworld_backend.load_balancer_ingress[0].ip}:3001"
           }
 
           env {
