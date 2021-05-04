@@ -1,13 +1,12 @@
-credentials            = "~/.google/realworld-tf-gke.json"
 project_id             = "toptal-realworld-app"
 cluster_name           = "realworld-cluster"
 regional               = false
 region                 = "us-central1"
 zones                  = ["us-central1-c"]
-network                = "realworld-network"
-subnetwork             = "realworld-subnet"
-ip_range_pods_name     = "ip-range-pods"
-ip_range_services_name = "ip-range-services"
+network                = "default"
+subnetwork             = "default"
+ip_range_pods_name     = ""
+ip_range_services_name = ""
 node_pools             = {
           pool_name          = "default-node-pool"
           machine_type       = "e2-medium"
@@ -18,3 +17,7 @@ node_pools             = {
           disk_type          = "pd-standard"
           initial_node_count = 2
 }
+
+jwt_secret             = "Y2U0ZTYwYzIyOTdhZTAxNmVhNjFkZTExNDNhZTdmZDg0ZjNiZTI3Yzc4YzMwYTNhODM5MTAyNjNjMjlhYmU1NTNjZjU0ZjZhN2JmNTExMDA2M2Q0OTkwMWIxNTU4MGRlN2YwZWZiOTEwYmEzZGE3MjhjNWFiNjlkNDZkNWI4Nzg="
+mongodb_pass           = "dGVzdA=="
+ 

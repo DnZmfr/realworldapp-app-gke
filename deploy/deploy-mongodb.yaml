@@ -55,7 +55,7 @@ spec:
       volumes:
       - name: mongodb-data-volume
         persistentVolumeClaim:
-          claimName: mongodb-volume-claim
+          claimName: mongodb-pvc
       - configMap:
           name: mongodb-configmap
         name: mongodb-init-volume

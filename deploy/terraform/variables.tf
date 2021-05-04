@@ -1,8 +1,3 @@
-variable "credentials" {
-  type        = string
-  description = "Location of json credentials file"
-}
-
 variable "project_id" {
   type        = string
   description = "The project ID to host the cluster in (required)"
@@ -49,7 +44,7 @@ variable "ip_range_services_name" {
 }
 
 variable "node_pools" {
-  type = object({
+  type        = object({
     pool_name          = string
     machine_type       = string
     node_locations     = string
@@ -60,4 +55,14 @@ variable "node_pools" {
     initial_node_count = number
   })
   description = "Node pools configuration"
+}
+
+variable "jwt_secret" {
+  type        = string
+  description = "JWT_SECRET required variable for backend"
+}
+
+variable "mongodb_pass" {
+  type        = string
+  description = "MongoDB password"
 }
