@@ -8,7 +8,6 @@ terraform {
 }
 
 provider "google" {
-
   project = var.project_id
   region  = var.region
 }
@@ -20,6 +19,7 @@ module "gke_auth" {
   location     = module.gke.location
   cluster_name = module.gke.name
 }
+
 resource "local_file" "kubeconfig" {
   content         = module.gke_auth.kubeconfig_raw
   filename        = pathexpand("~/.kube/config")
