@@ -1,52 +1,13 @@
-resource "kubernetes_secret" "jwt_secret" {
+/*************************
+      VOLUME CLAIMS
+ *************************/
+resource "kubernetes_persistent_volume_claim" "mongodb_pvc" {
   depends_on = [module.gke]
   timeouts {
     create = "3m"
   }
   metadata {
-    name = "jwt-secret"
-  }
-
-  data = {
-    JWT_SECRET = var.jwt_secret
-  }
-
-  type = "Opaque"
-}
-
-resource "kubernetes_secret" "mongodb_passwd" {
-  depends_on = [module.gke]
-  timeouts {
-    create = "3m"
-  }
-  metadata {
-    name = "mongodb-passwd"
-  }
-
-  data = {
-    DB_PASSWORD = var.mongodb_pass
-  }
-
-  type = "Opaque"
-}
-
-resource "kubernetes_config_map" "mongodb_configmap" {
-  metadata {
-    name = "mongodb-configmap"
-  }
-
-  data = {
-    "mongo-init.js" = "db.createUser({\n  user: 'test',\n  pwd: 'test',\n  roles: [{role: 'readWrite', db: 'test'}]\n});\n"
-  }
-}
-
-resource "kubernetes_persistent_volume_claim" "mongodb_volume_claim" {
-  depends_on = [module.gke]
-  timeouts {
-    create = "3m"
-  }
-  metadata {
-    name = "mongodb-volume-claim"
+    name = "mongodb-pvc"
   }
 
   spec {
@@ -60,7 +21,66 @@ resource "kubernetes_persistent_volume_claim" "mongodb_volume_claim" {
   }
 }
 
+/*************************
+     CONFIG MAPS
+ *************************/
+resource "kubernetes_config_map" "mongodb_configmap" {
+  depends_on = [module.gke]
+  timeouts {
+    create = "3m"
+  }
+  metadata {
+    name = "mongodb-configmap"
+  }
+
+  data = {
+    "mongo-init.js" = "db.createUser({\n  user: 'test',\n  pwd: 'test',\n  roles: [{role: 'readWrite', db: 'test'}]\n});\n"
+  }
+}
+
+/*************************
+     SECRETS
+ *************************/
+resource "kubernetes_secret" "jwt_secret" {
+  depends_on = [
+    kubernetes_persistent_volume_claim.mongodb_pvc,
+  ]
+  metadata {
+    name = "jwt-secret"
+  }
+
+  data = {
+    JWT_SECRET = var.jwt_secret
+  }
+
+  type = "Opaque"
+}
+
+resource "kubernetes_secret" "mongodb_passwd" {
+  depends_on = [
+    kubernetes_persistent_volume_claim.mongodb_pvc,
+  ]
+  metadata {
+    name = "mongodb-passwd"
+  }
+
+  data = {
+    DB_PASSWORD = var.mongodb_pass
+  }
+
+  type = "Opaque"
+}
+
+
+
+/*************************
+     SERVICES
+ *************************/
 resource "kubernetes_service" "mongodb" {
+  depends_on = [module.gke]
+  timeouts {
+    create = "3m"
+  }
   metadata {
     name = "mongodb"
 
@@ -82,7 +102,68 @@ resource "kubernetes_service" "mongodb" {
   }
 }
 
+resource "kubernetes_service" "realworld_backend" {
+  depends_on = [module.gke]
+  timeouts {
+    create = "3m"
+  }
+  metadata {
+    name = "realworld-backend"
+
+    labels = {
+      app = "realworld-backend"
+    }
+  }
+
+  spec {
+    port {
+      protocol = "TCP"
+      port     = 3001
+    }
+
+    selector = {
+      app = "realworld-backend"
+    }
+
+    type = "LoadBalancer"
+  }
+}
+
+resource "kubernetes_service" "realworld_frontend" {
+  depends_on = [module.gke]
+  timeouts {
+    create = "3m"
+  }
+  metadata {
+    name = "realworld-frontend"
+  }
+
+  spec {
+    port {
+      protocol    = "TCP"
+      port        = 80
+      target_port = "3002"
+    }
+
+    selector = {
+      app = "realworld-frontend"
+    }
+
+    type = "LoadBalancer"
+  }
+}
+
+
+/*************************
+     DEPLOYMENTS
+ *************************/
 resource "kubernetes_deployment" "mongodb" {
+  depends_on = [
+    kubernetes_secret.mongodb_passwd,
+    kubernetes_config_map.mongodb_configmap,
+    kubernetes_persistent_volume_claim.mongodb_pvc,
+    kubernetes_service.mongodb,
+  ]
   metadata {
     name = "mongodb"
 
@@ -112,7 +193,7 @@ resource "kubernetes_deployment" "mongodb" {
           name = "mongodb-data-volume"
 
           persistent_volume_claim {
-            claim_name = "mongodb-volume-claim"
+            claim_name = "mongodb-pvc"
           }
         }
 
@@ -175,30 +256,11 @@ resource "kubernetes_deployment" "mongodb" {
   }
 }
 
-resource "kubernetes_service" "realworld_backend" {
-  metadata {
-    name = "realworld-backend"
-
-    labels = {
-      app = "realworld-backend"
-    }
-  }
-
-  spec {
-    port {
-      protocol = "TCP"
-      port     = 3001
-    }
-
-    selector = {
-      app = "realworld-backend"
-    }
-
-    type = "LoadBalancer"
-  }
-}
-
 resource "kubernetes_deployment" "realworld_backend" {
+  depends_on = [
+    kubernetes_deployment.mongodb,
+    kubernetes_service.realworld_backend,
+  ]
   metadata {
     name = "realworld-backend"
 
@@ -288,27 +350,11 @@ resource "kubernetes_deployment" "realworld_backend" {
   }
 }
 
-resource "kubernetes_service" "realworld_frontend" {
-  metadata {
-    name = "realworld-frontend"
-  }
-
-  spec {
-    port {
-      protocol    = "TCP"
-      port        = 80
-      target_port = "3002"
-    }
-
-    selector = {
-      app = "realworld-frontend"
-    }
-
-    type = "LoadBalancer"
-  }
-}
-
 resource "kubernetes_deployment" "realworld_frontend" {
+  depends_on = [
+    kubernetes_deployment.realworld_backend,
+    kubernetes_service.realworld_frontend,
+  ]
   metadata {
     name = "realworld-frontend"
 
@@ -345,7 +391,7 @@ resource "kubernetes_deployment" "realworld_frontend" {
 
           env {
             name  = "BACKEND_URL"
-            value = "http://realworld-backend.default.svc.cluster.local:3001"
+            value = "http://${kubernetes_service.realworld_backend.status.0.load_balancer.0.ingress.0.ip}:3001"
           }
 
           env {
