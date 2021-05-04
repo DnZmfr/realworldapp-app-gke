@@ -25,10 +25,9 @@ resource "kubernetes_persistent_volume_claim" "mongodb_pvc" {
      CONFIG MAPS
  *************************/
 resource "kubernetes_config_map" "mongodb_configmap" {
-  depends_on = [module.gke]
-  timeouts {
-    create = "3m"
-  }
+  depends_on = [
+    kubernetes_persistent_volume_claim.mongodb_pvc,
+  ]
   metadata {
     name = "mongodb-configmap"
   }
