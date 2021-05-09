@@ -2,11 +2,11 @@ steps:
 - name: 'hashicorp/terraform:0.15.1'
   env:
   - 'GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
-  dir: 'terraform/'
+  dir: 'deploy/terraform/app/'
   args: ['init']
 
 - name: 'hashicorp/terraform:0.15.1'
   env:
   - 'GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
-  dir: 'terraform/'
+  dir: 'deploy/terraform/app/'
   args: ['apply', '-auto-approve']

@@ -5,6 +5,10 @@ terraform {
       version = ">= 2.0.0"
     }
   }
+  backend "gcs" {
+    bucket = "toptal-realworld-app-tfstate"
+    prefix = "env/dev"
+  }
 }
 
 provider "kubernetes" {
