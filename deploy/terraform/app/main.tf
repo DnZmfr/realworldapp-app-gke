@@ -1,11 +1,20 @@
+terraform {
+  required_providers {
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 2.0.0"
+    }
+  }
+}
+
+provider "kubernetes" {
+  config_path = "~/.kube/config"
+}
+
 /*************************
       VOLUME CLAIMS
  *************************/
 resource "kubernetes_persistent_volume_claim" "mongodb_pvc" {
-  depends_on = [module.gke]
-  timeouts {
-    create = "3m"
-  }
   metadata {
     name = "mongodb-pvc"
   }
@@ -67,10 +76,6 @@ resource "kubernetes_secret" "mongodb_passwd" {
      SERVICES
  *************************/
 resource "kubernetes_service" "mongodb" {
-  depends_on = [module.gke]
-  timeouts {
-    create = "3m"
-  }
   metadata {
     name = "mongodb"
     labels = {
@@ -89,13 +94,9 @@ resource "kubernetes_service" "mongodb" {
 }
 
 resource "kubernetes_service" "realworld_backend" {
-  depends_on = [module.gke]
-  timeouts {
-    create = "3m"
-  }
+  wait_for_load_balancer = true
   metadata {
     name = "realworld-backend"
-
     labels = {
       app = "realworld-backend"
     }
@@ -113,10 +114,6 @@ resource "kubernetes_service" "realworld_backend" {
 }
 
 resource "kubernetes_service" "realworld_frontend" {
-  depends_on = [module.gke]
-  timeouts {
-    create = "3m"
-  }
   metadata {
     name = "realworld-frontend"
   }
@@ -328,7 +325,7 @@ resource "kubernetes_deployment" "realworld_frontend" {
           }
           env {
             name  = "BACKEND_URL"
-            value = "http://${kubernetes_service.realworld_backend.load_balancer_ingress[0].ip}:3001"
+            value = "http://${kubernetes_service.realworld_backend.status.0.load_balancer.0.ingress.0.ip}:3001"
           }
           env {
             name  = "FRONTEND_URL"
