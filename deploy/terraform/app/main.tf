@@ -14,6 +14,7 @@ terraform {
 data "google_client_config" "provider" {}
 
 data "google_container_cluster" "my_cluster" {
+  project  = var.project_id
   name     = var.cluster_name
   location = var.location
 }
