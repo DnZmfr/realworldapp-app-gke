@@ -1,12 +1,10 @@
 steps:
 - name: 'hashicorp/terraform:0.15.0'
-  env:
-  - 'GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+  id : tf_init
   dir: 'deploy/terraform/app/'
   args: ['init']
 
 - name: 'hashicorp/terraform:0.15.0'
-  env:
-  - 'GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+  id: tf_apply
   dir: 'deploy/terraform/app/'
-  args: ['apply', '-auto-approve']
+  args: ['apply', '-var="image_tag=${_IMAGE_TAG}"', '-auto-approve']
