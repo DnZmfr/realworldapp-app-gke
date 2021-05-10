@@ -256,7 +256,7 @@ resource "kubernetes_deployment" "realworld_backend" {
       spec {
         container {
           name  = "realworld-backend"
-          image = "gcr.io/toptal-realworld-app/realworld-backend"
+          image = "gcr.io/toptal-realworld-app/realworld-backend:${var.image_tag}"
           port {
             container_port = 3001
             protocol       = "TCP"
@@ -333,7 +333,7 @@ resource "kubernetes_deployment" "realworld_frontend" {
       spec {
         container {
           name  = "realworld-frontend"
-          image = "gcr.io/toptal-realworld-app/realworld-frontend"
+          image = "gcr.io/toptal-realworld-app/realworld-frontend:${var.image_tag}"
           port {
             container_port = 3002
             protocol       = "TCP"

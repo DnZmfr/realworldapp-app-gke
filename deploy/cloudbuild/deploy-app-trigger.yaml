@@ -7,4 +7,4 @@ steps:
 - name: 'hashicorp/terraform:0.15.0'
   id: tf_apply
   dir: 'deploy/terraform/app/'
-  args: ['apply', '-var="image_tag=${_IMAGE_TAG}"', '-auto-approve']
+  args: ['apply', '-var="image_tag=${SHORT_SHA}"', '-auto-approve']
