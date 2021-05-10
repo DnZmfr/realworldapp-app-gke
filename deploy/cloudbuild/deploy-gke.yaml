@@ -1,0 +1,12 @@
+steps:
+- name: 'hashicorp/terraform:0.15.0'
+  env:
+  - 'GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+  dir: 'deploy/terraform/gke/'
+  args: ['init']
+
+- name: 'hashicorp/terraform:0.15.0'
+  env:
+  - 'GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+  dir: 'deploy/terraform/gke/'
+  args: ['apply', '-auto-approve']
