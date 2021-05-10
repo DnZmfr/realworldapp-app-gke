@@ -1,3 +1,1 @@
-jwt_secret             = "Y2U0ZTYwYzIyOTdhZTAxNmVhNjFkZTExNDNhZTdmZDg0ZjNiZTI3Yzc4YzMwYTNhODM5MTAyNjNjMjlhYmU1NTNjZjU0ZjZhN2JmNTExMDA2M2Q0OTkwMWIxNTU4MGRlN2YwZWZiOTEwYmEzZGE3MjhjNWFiNjlkNDZkNWI4Nzg="
-mongodb_pass           = "dGVzdA=="
- 
+../global_vars.auto.tfvars

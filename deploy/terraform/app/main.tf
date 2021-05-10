@@ -6,16 +6,16 @@ terraform {
     }
   }
   backend "gcs" {
-    bucket = "toptal-realworld-app-tfstate"
-    prefix = "env/dev"
+    bucket = var.gcs_bucket
+    prefix = "env/dev/realworld-app.tfstate"
   }
 }
 
 data "google_client_config" "provider" {}
 
 data "google_container_cluster" "my_cluster" {
-  name     = "realworld-cluster"
-  location = "us-central1-c"
+  name     = var.cluster_name
+  location = var.location
 }
 
 provider "kubernetes" {

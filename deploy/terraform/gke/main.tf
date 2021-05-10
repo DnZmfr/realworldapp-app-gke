@@ -5,6 +5,10 @@ terraform {
       version =  "~> 3.42.0"
     }
   }
+  backend "gcs" {
+    bucket = var.gcs_bucket
+    prefix = "env/dev/gke-cluster.tfstate"
+  }
 }
 
 provider "google" {
@@ -18,12 +22,6 @@ module "gke_auth" {
   project_id   = var.project_id
   location     = module.gke.location
   cluster_name = module.gke.name
-}
-
-resource "local_file" "kubeconfig" {
-  content         = module.gke_auth.kubeconfig_raw
-  filename        = pathexpand("~/.kube/config")
-  file_permission = "0600"
 }
 
 module "gke" {
