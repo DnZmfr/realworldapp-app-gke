@@ -37,4 +37,4 @@ steps:
   args:
   - 'push'
   - 'gcr.io/$PROJECT_ID/realworld-backend:$SHORT_SHA'
-  wait_for: ['build_backend']
+  wait_for: ['build_backend', 'push_frontend']
