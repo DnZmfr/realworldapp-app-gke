@@ -1,15 +1,4 @@
 steps:
-# This step builds the frontend container image
-- name: 'gcr.io/cloud-builders/docker'
-  id: build_frontend
-  dir: '/workspace/frontend'
-  args:
-  - 'build'
-  - '-t'
-  - 'gcr.io/$PROJECT_ID/realworld-frontend:$SHORT_SHA'
-  - '.'
-  waitFor: ['-']
-
 # This step builds the backend container image
 - name: 'gcr.io/cloud-builders/docker'
   id: build_backend
@@ -21,14 +10,16 @@ steps:
   - '.'
   waitFor: ['-']
 
-# This step pushes the new frontend image to Google Container Registry
+# This step builds the frontend container image
 - name: 'gcr.io/cloud-builders/docker'
-  id: push_frontend
+  id: build_frontend
   dir: '/workspace/frontend'
   args:
-  - 'push'
+  - 'build'
+  - '-t'
   - 'gcr.io/$PROJECT_ID/realworld-frontend:$SHORT_SHA'
-  wait_for: ['build_frontend']
+  - '.'
+  waitFor: ['-']
 
 # This step pushes the new backend image to Google Container Registry
 - name: 'gcr.io/cloud-builders/docker'
@@ -37,4 +28,14 @@ steps:
   args:
   - 'push'
   - 'gcr.io/$PROJECT_ID/realworld-backend:$SHORT_SHA'
-  wait_for: ['build_backend', 'push_frontend']
+  wait_for: ['build_backend']
+
+# This step pushes the new frontend image to Google Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  id: push_frontend
+  dir: '/workspace/frontend'
+  args:
+  - 'push'
+  - 'gcr.io/$PROJECT_ID/realworld-frontend:$SHORT_SHA'
+  wait_for: ['build_frontend', 'push_backend']
+
