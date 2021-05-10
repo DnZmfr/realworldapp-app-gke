@@ -4,14 +4,16 @@ bold() {
   echo "$(tput bold)" "$*" "$(tput sgr0)";
 }
 
-TF_VERSION="0.15.0"
+TF_VERSION="0.15.3"
+TF_FILE="terraform_${TF_VERSION}_linux_amd64.zip"
 GCS_BUCKET="${GOOGLE_CLOUD_PROJECT}-tfstate"
 
 bold "Install terraform v${TF_VERSION}"
 mkdir -p "${HOME}/bin"
-docker run -v ${HOME}/bin:/software sethvargo/hashicorp-installer terraform "${TF_VERSION}"
-sudo chown -R ${USER}: "${HOME}/bin"
+wget https://releases.hashicorp.com/terraform/${TF_FILE}
+unzip ${TF_FILE} -d ${HOME}/bin/
 chmod 700 "${HOME}/bin/terraform"
+rm -f ${TF_FILE}
 
 bold "Install terraform completion"
 ${HOME}/bin/terraform -install-autocomplete || true
