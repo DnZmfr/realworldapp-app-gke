@@ -6,4 +6,5 @@ output "cluster_name" {
 output "cluster_endpoint" {
   description = "Cluster endpoint"
   value       = module.gke.endpoint
+  sensitive   = true
 }
