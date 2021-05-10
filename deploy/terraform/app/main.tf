@@ -6,7 +6,7 @@ terraform {
     }
   }
   backend "gcs" {
-    bucket = var.gcs_bucket
+    bucket = "toptal-realworld-app-tfstate"
     prefix = "env/dev/realworld-app.tfstate"
   }
 }
