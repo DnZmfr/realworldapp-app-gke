@@ -15,7 +15,7 @@ if (!backendURL) {
   try {
     const Application = await getApplication({
       name: 'Conduit',
-      description: 'A place to share your knowledge. v2',
+      description: 'A place to share your knowledge. v3',
       backendURL
     });
 
