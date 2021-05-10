@@ -18,6 +18,7 @@ steps:
   - '-t'
   - 'gcr.io/$PROJECT_ID/realworld-backend:$SHORT_SHA'
   - '.'
+  waitFor: ['-']
 
 # This step pushes the new frontend image to Google Container Registry
 - name: 'gcr.io/cloud-builders/docker'
