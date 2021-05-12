@@ -23,3 +23,4 @@ gsutil ls gs://${GCS_BUCKET} || gsutil -q mb "gs://${GCS_BUCKET}"
 
 bold "Enable object versioning to keep the history of deployments"
 gsutil versioning set on gs://${GCS_BUCKET}
+

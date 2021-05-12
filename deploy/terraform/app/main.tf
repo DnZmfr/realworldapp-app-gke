@@ -88,6 +88,19 @@ resource "kubernetes_secret" "mongodb_passwd" {
   type = "Opaque"
 }
 
+resource "kubernetes_secret" "mongodb_uri" {
+  depends_on = [
+    kubernetes_persistent_volume_claim.mongodb_pvc,
+  ]
+  metadata {
+    name = "mongodb-uri"
+  }
+  data = {
+    DB_PASSWORD = var.mongodb_uri
+  }
+  type = "Opaque"
+}
+
 /*************************
      SERVICES
  *************************/
@@ -268,7 +281,12 @@ resource "kubernetes_deployment" "realworld_backend" {
           }
           env {
             name  = "MONGODB_STORE_CONNECTION_STRING"
-            value = "mongodb://test:test@mongodb.default.svc.cluster.local:27017/test"
+            value_from {
+              secret_key_ref {
+                name = "mongodb-uri"
+                key  = "MONGODB_URI"
+              }
+            }
           }
           env {
             name = "JWT_SECRET"
@@ -370,3 +388,49 @@ resource "kubernetes_deployment" "realworld_frontend" {
   }
 }
 
+/*************************
+     CRONJOBS
+ *************************/
+resource "kubernetes_cron_job" "backup-mongodb"
+  depends_on = [
+    kubernetes_deployment.mongodb,
+  ]
+  metadata {
+    name = "backup-mongodb"
+  }
+  spec {
+    schedule                      = "0 4 * * *"
+    concurrency_policy            = "Forbid"
+    successful_jobs_history_limit = 3
+    failed_jobs_history_limit     = 1
+    starting_deadline_seconds     = 10
+    job_template {
+      metadata {}
+      spec {
+        template {
+          metadata {}
+          spec {
+            container {
+              name  = "backup-mongodb"
+              image = "gcr.io/toptal-realworld-app/backup-mongodb:latest"
+              env {
+                name = "MONGODB_URI"
+                value_from {
+                  secret_key_ref {
+                    name = "mongodb-uri"
+                    key  = "MONGODB_URI"
+                  }
+                }
+              }
+              env {
+                name  = "GCS_BUCKET"
+                value = "gs://${var.gcs_bucket}/env/dev/mongodb-backup/"
+              }
+              image_pull_policy = "Always"
+            }
+          }
+        }
+      }
+    }
+  }
+}

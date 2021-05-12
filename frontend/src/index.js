@@ -6,7 +6,7 @@ import {getApplication} from './components/application';
 const backendURL = process.env.BACKEND_URL;
 
 if (!backendURL) {
-  throw new Error(`'BACKEND_URL' environment variable is missing`);
+  throw new Error(`'BACKEND_URL' environment variable is missing.`);
 }
 
 (async () => {
