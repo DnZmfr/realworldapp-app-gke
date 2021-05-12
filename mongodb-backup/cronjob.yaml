@@ -31,6 +31,10 @@ spec:
               - name: gcp-key
                 mountPath: /secrets/gcp-key
                 readOnly: true
+            command:
+            - /bin/bash
+            - -c
+            - gcloud auth activate-service-account --key-file=/secrets/gcp/service-account.json; /scripts/backup.sh
           volumes:
             - name: gcp-key
               secret:
