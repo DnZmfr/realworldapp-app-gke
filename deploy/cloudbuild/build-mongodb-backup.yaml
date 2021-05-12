@@ -1,0 +1,21 @@
+steps:
+# This step builds the mongodb-backup container image
+- name: 'gcr.io/cloud-builders/docker'
+  id: build_mongodb_backup
+  dir: '/workspace/mongodb-backup'
+  args:
+  - 'build'
+  - '-t'
+  - 'gcr.io/$PROJECT_ID/mongodb-backup:latest'
+  - '.'
+  waitFor: ['-']
+
+# This step pushes the new mongodb-backup image to Google Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  id: push_mongodb_backup
+  dir: '/workspace/mongodb-backup'
+  args:
+  - 'push'
+  - 'gcr.io/$PROJECT_ID/mongodb-backup:latest'
+  wait_for: ['build_mongodb_backup']
+
