@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: backup-mongodb
 spec:
-  schedule: "0 4 * * *"
+  schedule: "0 12 * * *"
   concurrencyPolicy: Forbid
   suspend: false
   successfulJobsHistoryLimit: 3
@@ -15,7 +15,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: backup-mongodb
-            image: gcr.io/toptal-realworld-app/backup-mongodb:latest
+            image: gcr.io/toptal-realworld-app/mongodb-backup:latest
             env:
             - name: MONGODB_URI
               valueFrom:
@@ -23,10 +23,7 @@ spec:
                   name: mongodb-uri
                   key: MONGODB_URI              
             - name: GCS_BUCKET
-              valueFrom:
-                secretKeyRef:
-                  name: gcp-key
-                  key: BUCKET_URI
+              value: gs://toptal-realworld-app-tfstate/env/dev/mongodb-backup/
             volumeMounts:
               - name: gcp-key
                 mountPath: /secrets/gcp-key
@@ -34,7 +31,7 @@ spec:
             command:
             - /bin/bash
             - -c
-            - gcloud auth activate-service-account --key-file=/secrets/gcp/service-account.json; /scripts/backup.sh
+            - gcloud auth activate-service-account --key-file=/secrets/gcp-key/service-account.json; /scripts/backup.sh
           volumes:
             - name: gcp-key
               secret:
