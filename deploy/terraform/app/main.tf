@@ -88,6 +88,20 @@ resource "kubernetes_secret" "mongodb_passwd" {
   type = "Opaque"
 }
 
+resource "kubernetes_secret" "mongodb_uri" {
+  depends_on = [
+    kubernetes_persistent_volume_claim.mongodb_pvc,
+  ]
+  metadata {
+    name = "mongodb-uri"
+  }
+  data = {
+    DB_PASSWORD = var.mongodb_pass
+  }
+  type = "Opaque"
+}
+
+
 /*************************
      SERVICES
  *************************/
@@ -268,7 +282,12 @@ resource "kubernetes_deployment" "realworld_backend" {
           }
           env {
             name  = "MONGODB_STORE_CONNECTION_STRING"
-            value = "mongodb://test:test@mongodb.default.svc.cluster.local:27017/test"
+            value_from {
+              secret_key_ref {
+                name = "mongodb-uri"
+                key  = "MONGODB_URI"
+              }
+            }
           }
           env {
             name = "JWT_SECRET"

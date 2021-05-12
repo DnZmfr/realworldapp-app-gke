@@ -77,6 +77,11 @@ variable "mongodb_pass" {
   description = "MongoDB password"
 }
 
+variable "mongodb_uri" {
+  type        = string
+  description = "MongoDB connection string"
+}
+
 variable "image_tag" {
   type        = string
   description = "The tag of the container image to be deployed. This is retrieved automatically by the deploy-app-trigger pipeline"
