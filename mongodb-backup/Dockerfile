@@ -1,7 +1,9 @@
 FROM mongo:4
 
 RUN apt update
-RUN apt -y install gsutil
+RUN apt -y install wget
+RUN wget https://storage.googleapis.com/pub/gsutil.tar.gz
+RUN tar xfz gsutil.tar.gz -C $HOME
 
 WORKDIR /scripts
 

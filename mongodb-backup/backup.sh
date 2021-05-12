@@ -13,7 +13,7 @@ bold "Back-up mongoDB database to ${BACKUP_FILENAME}"
 mongodump --archive=${BACKUP_FILENAME} --gzip --uri ${MONGODB_URI}
 
 bold "Copy backup file to Google Cloud Storage..."
-gsutil cp ${BACKUP_FILENAME} ${GCS_BUCKET}
+$HOME/gsutil/gsutil cp ${BACKUP_FILENAME} ${GCS_BUCKET}
 
 bold "Delete local backup file..."
 rm -f ${BACKUP_FILENAME}
