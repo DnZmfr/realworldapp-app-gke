@@ -1,3 +1,7 @@
+/*************************
+      GKE
+ *************************/
+
 project_id             = "toptal-realworld-app"
 cluster_name           = "realworld-cluster"
 gcs_bucket             = "toptal-realworld-app-tfstate"
@@ -20,6 +24,19 @@ node_pools             = {
           initial_node_count = 2
 }
 
+
+/*************************
+      APP
+ *************************/
+
 jwt_secret             = "Y2U0ZTYwYzIyOTdhZTAxNmVhNjFkZTExNDNhZTdmZDg0ZjNiZTI3Yzc4YzMwYTNhODM5MTAyNjNjMjlhYmU1NTNjZjU0ZjZhN2JmNTExMDA2M2Q0OTkwMWIxNTU4MGRlN2YwZWZiOTEwYmEzZGE3MjhjNWFiNjlkNDZkNWI4Nzg="
 mongodb_pass           = "dGVzdA=="
 image_tag              = ""
+
+
+/*************************
+      MONITORING
+ *************************/
+
+grafana_admin          = "admin"
+grafana_password       = "test123"

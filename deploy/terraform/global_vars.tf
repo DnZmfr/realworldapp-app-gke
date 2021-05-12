@@ -81,3 +81,13 @@ variable "image_tag" {
   type        = string
   description = "The tag of the container image to be deployed. This is retrieved automatically by the deploy-app-trigger pipeline"
 }
+
+variable "grafana_admin" {
+  type        = string
+  description = "Grafana admin username"
+}
+
+variable "grafana_password" {
+  type        = string
+  description = "Grafana admin password"
+}

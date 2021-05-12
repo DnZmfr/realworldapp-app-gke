@@ -1,0 +1,9 @@
+alertmanager:
+  persistentVolume:
+    storageClass: prometheus
+server:
+  persistentVolume:
+    storageClass: prometheus
+  service:
+    type: NodePort
+    nodePort: 30900 

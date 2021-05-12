@@ -1,17 +1,17 @@
 steps:
 - name: 'hashicorp/terraform:0.15.3'
-  id: tf_init
-  dir: 'deploy/terraform/gke/'
+  id : tf_init
+  dir: 'deploy/terraform/monitoring/'
   args: ['init']
 
 - name: 'hashicorp/terraform:0.15.3'
   id: tf_plan
-  dir: 'deploy/terraform/app/'
+  dir: 'deploy/terraform/monitoring/'
   args: ['plan']
   wait_for: ['tf_init']
 
 - name: 'hashicorp/terraform:0.15.3'
   id: tf_apply
-  dir: 'deploy/terraform/gke/'
+  dir: 'deploy/terraform/monitoring/'
   args: ['apply', '-auto-approve']
   wait_for: ['tf_plan']
