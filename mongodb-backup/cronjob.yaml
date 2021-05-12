@@ -1,0 +1,37 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: backup-mongodb
+spec:
+  schedule: "0 4 * * *"
+  concurrencyPolicy: Forbid
+  suspend: false
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: backup-mongodb
+            image: gcr.io/toptal-realworld-app/backup-mongodb:latest
+            env:
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-uri
+                  key: MONGODB_URI              
+            - name: GCS_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: gcp-key
+                  key: BUCKET_URI
+            volumeMounts:
+              - name: gcp-key
+                mountPath: /secrets/gcp-key
+                readOnly: true
+          volumes:
+            - name: gcp-key
+              secret:
+                secretName: gcp-key
