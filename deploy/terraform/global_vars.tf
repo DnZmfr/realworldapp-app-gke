@@ -1,3 +1,7 @@
+/*************************
+      GKE
+ *************************/
+
 variable "project_id" {
   type        = string
   description = "The project ID to host the cluster in (required)"
@@ -67,6 +71,11 @@ variable "node_pools" {
   description = "Node pools configuration"
 }
 
+
+/*************************
+      APP
+ *************************/
+
 variable "jwt_secret" {
   type        = string
   description = "JWT_SECRET required variable for backend"
@@ -86,6 +95,11 @@ variable "image_tag" {
   type        = string
   description = "The tag of the container image to be deployed. This is retrieved automatically by the deploy-app-trigger pipeline"
 }
+
+
+/*************************
+      MONITORING
+ *************************/
 
 variable "grafana_admin" {
   type        = string

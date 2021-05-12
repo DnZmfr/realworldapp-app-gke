@@ -391,7 +391,7 @@ resource "kubernetes_deployment" "realworld_frontend" {
 /*************************
      CRONJOBS
  *************************/
-resource "kubernetes_cron_job" "backup-mongodb"
+resource "kubernetes_cron_job" "backup-mongodb" {
   depends_on = [
     kubernetes_deployment.mongodb,
   ]
