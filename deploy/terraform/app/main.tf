@@ -96,7 +96,7 @@ resource "kubernetes_secret" "mongodb_uri" {
     name = "mongodb-uri"
   }
   data = {
-    DB_PASSWORD = var.mongodb_pass
+    DB_PASSWORD = var.mongodb_uri
   }
   type = "Opaque"
 }
