@@ -31,7 +31,7 @@ node_pools             = {
 
 jwt_secret             = "Y2U0ZTYwYzIyOTdhZTAxNmVhNjFkZTExNDNhZTdmZDg0ZjNiZTI3Yzc4YzMwYTNhODM5MTAyNjNjMjlhYmU1NTNjZjU0ZjZhN2JmNTExMDA2M2Q0OTkwMWIxNTU4MGRlN2YwZWZiOTEwYmEzZGE3MjhjNWFiNjlkNDZkNWI4Nzg="
 mongodb_pass           = "dGVzdA=="
-mongodb_uri            = "bW9uZ29kYjovL3Rlc3Q6dGVzdEBtb25nb2RiLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWw6MjcwMTcvdGVzdA=="
+mongodb_uri            = "mongodb://test:test@mongodb.default.svc.cluster.local:27017/test"
 image_tag              = ""
 
 
