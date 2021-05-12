@@ -83,7 +83,7 @@ resource "kubernetes_secret" "mongodb_passwd" {
     name = "mongodb-passwd"
   }
   data = {
-    DB_PASSWORD = var.mongodb_pass
+    MONGODB_URI = var.mongodb_pass
   }
   type = "Opaque"
 }
@@ -412,7 +412,7 @@ resource "kubernetes_cron_job" "backup-mongodb" {
           spec {
             container {
               name  = "backup-mongodb"
-              image = "gcr.io/toptal-realworld-app/backup-mongodb:latest"
+              image = "gcr.io/toptal-realworld-app/mongodb-backup:latest"
               env {
                 name = "MONGODB_URI"
                 value_from {
