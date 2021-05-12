@@ -11,3 +11,4 @@ ENV MONGODB_STORE_CONNECTION_STRING=mongodb://user:password@mongodb.default.svc.
 ENV JWT_SECRET=490c05b9648b59f4608750876ce56fac5644f53ce6edb3d0fbaa3d6f1670744cd1bf2c7c27d37139bfb865d9440aa3babfc6fa422705dfa89477fdf85b55d958
 
 ENTRYPOINT ["npm", "run", "start"]
+
