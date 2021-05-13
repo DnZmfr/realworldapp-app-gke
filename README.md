@@ -117,7 +117,7 @@ Cloud Build configuration file location: deploy/cloudbuild/deploy-monitoring-man
 #### GKE cluster deployment
 On _**Cloud Build**_ -> _**Triggers**_, click on _**RUN**_ button of _**Deploy-GKE-Manual**_ trigger and then hit _**RUN TRIGGER**_ button.
 
-#### APP stack deployment
+#### APP stack deployment (MongoDB, Backend, Frontend)
 Any update in the source code of frontend or backend services  will trigger an automated build followed by an automated deployment. 
 
 As soon as the new update is it pushed to git, the _**Build-APP-Auto**_ trigger will start to build new docker container images for frontend and backend services and push them to GCR.  
@@ -137,5 +137,5 @@ Note: to change the cronjob schedule, line number 5 in the [realworldapp-app-gke
   schedule: "0 12 * * *"
 ```
 
-#### Monitoring (Prometheus, Loki, Grafana) deployment
+#### Monitoring deployment (Prometheus, Loki, Grafana)
 On _**Cloud Build**_ -> _**Triggers**_, click on _**RUN**_ button of _**Deploy-MON-Manual**_ trigger and then hit _**RUN TRIGGER**_ button.
