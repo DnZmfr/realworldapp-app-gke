@@ -6,7 +6,7 @@ steps:
 
 - name: 'hashicorp/terraform:0.15.3'
   id: tf_plan
-  dir: 'deploy/terraform/app/'
+  dir: 'deploy/terraform/gke/'
   args: ['plan']
   wait_for: ['tf_init']
 
