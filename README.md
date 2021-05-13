@@ -79,10 +79,10 @@ cd realworldapp-app-gke/deploy
 ./prepare.sh
 ```
 #### Cloud Build Triggers
-All Cloud Build triggers needs to be manualy created as the api it's still in alpha/beta and so it's full of bugs.
+All Cloud Build triggers needs to be manualy created as the api it's still in alpha/beta and so it is not fully functional.
 
 * Connect GitHup repository.
-* Create Triggers:
+* Create Triggers with the following configurations:
 
 1. __Build-APP-Auto__  
 Event: Push to a branch  
