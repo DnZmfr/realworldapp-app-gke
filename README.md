@@ -60,7 +60,7 @@ This repository contains the app source code and all the scripts, files and inst
                 └── grafana-values.yaml      # grafana template values file         
 ```
 #### Architecture diagram
-
+![Architecture diagram](./diagram.png "Architecture diagram")
 
 ## Prerequisites
 
