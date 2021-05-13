@@ -13,7 +13,7 @@ This repository contains the app source code and all the scripts, files and inst
 * [Loki](https://grafana.com/oss/loki/) - Multi-tenant log aggregation system
 * [Grafana](https://grafana.com/) - Observability dashboards for prometheus metrics
 
-#### Repo Structure
+#### Repository Structure
 
 ```
 .
@@ -63,7 +63,79 @@ This repository contains the app source code and all the scripts, files and inst
 
 ## Prerequisites
 
+* A GCP account
+* A Github account
 
-### Prepare
+## Prepare
+
+Authenticate to the GCP account and create a project with id "toptal-realworld-app".  
+On a google Cloud Shell terminal, clone this git repository:
+```
+git clone https://github.com/DnZmfr/realworldapp-app-gke.git
+```
+Run [realworldapp-app-gke/deploy/prepare.sh](realworldapp-app-gke/deploy/prepare.sh) script to enable some APIs, create a service account and grant required roles in order to perform automated deployments via cloud build
+```
+cd realworldapp-app-gke/deploy
+./prepare.sh
+```
+#### Cloud Build Triggers
+All Cloud Build triggers needs to be manualy created as the api it's still in alpha/beta and so it's full of bugs.
+
+* Connect GitHup repository.
+* Create Triggers:
+
+1. __Build-APP-Auto__  
+Event: Push to a branch  
+Included files filter (glob): "frontend/\*\*" "backend/\*\*"  
+Cloud Build configuration file location: deploy/cloudbuild/build-app-auto.yaml
+
+1. __Deploy-APP-Auto__  
+Event: Pub/Sub message  
+Subscription: projects/toptal-realworld-app/topics/gcr  
+Cloud Build configuration file location: deploy/cloudbuild/deploy-app-auto.yaml  
+Substitution variables:  
+_ACTION: $(body.message.data.action)  
+_IMAGE_TAG: $(body.message.data.tag)  
+Filters: _IMAGE_TAG.matches("frontend") && _ACTION == "INSERT"
+
+1. __Deploy-APP-Manual__  
+Event: Manual invocation  
+Cloud Build configuration file location: deploy/cloudbuild/deploy-app-manual.yaml  
+Substitution variables:  
+_IMAGE_TAG: 3c9d717
+
+1. __Deploy-GKE-Manual__  
+Event: Manual invocation  
+Cloud Build configuration file location: deploy/cloudbuild/deploy-gke-manual.yaml
+
+1. __Deploy-MON-Manual__  
+Event: Manual invocation  
+Cloud Build configuration file location: deploy/cloudbuild/deploy-monitoring-manual.yaml
 
 ## Deploy
+
+#### GKE cluster deployment
+On _**Cloud Build**_ -> _**Triggers**_, click on _**RUN**_ button of _**Deploy-GKE-Manual**_ trigger and then hit _**RUN TRIGGER**_ button.
+
+#### APP stack deployment
+Any update in the source code of frontend or backend services  will trigger an automated build followed by an automated deployment. 
+
+As soon as the new update is it pushed to git, the _**Build-APP-Auto**_ trigger will start to build new docker container images for frontend and backend services and push them to GCR.  
+Once the new container images are pushed to GCR, the _**Deploy-APP-Auto**_ trigger will start a terraform deployment of the full stack to the Kubernetes cluster. 
+
+The terraform deployment state will be saved to a GCS (Google Cloud Storage) bucket so future deployments would also be possible to be performed via Cloud Shell terminal or other deployment machines where Cloud SDK Command Line tools is configured.
+
+#### MongoDB backup cronjob deployment
+From a google Cloud Shell terminal, run the following script:
+```
+cd realworldapp-app-gke/deploy
+./deploy-mongodb-backup.sh
+```
+
+Note: to change the cronjob schedule, line number 5 in the [realworldapp-app-gke/deploy/mongodb-cronjob.yaml](realworldapp-app-gke/deploy/mongodb-cronjob.yaml) file must be updated:
+```
+  schedule: "0 12 * * *"
+```
+
+#### Monitoring (Prometheus, Loki, Grafana) deployment
+On _**Cloud Build**_ -> _**Triggers**_, click on _**RUN**_ button of _**Deploy-MON-Manual**_ trigger and then hit _**RUN TRIGGER**_ button.
