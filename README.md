@@ -8,6 +8,7 @@ This repository contains the app source code and all the scripts, files and inst
 * [GCP](https://cloud.google.com/) - Google Cloud Platform
 * [GKE](https://cloud.google.com/kubernetes-engine/) - Google Kubernetes Engine
 * [CloudBuild](https://cloud.google.com/build) - Cloud Build Serverless CI/CD Platform
+* [MongoDB](https://www.mongodb.com/) - NoSQL database
 * [Docker](https://www.docker.com/) - Containerization platform
 * [Prometheus](https://prometheus.io/) - Time-series metrics monitoring tool
 * [Loki](https://grafana.com/oss/loki/) - Multi-tenant log aggregation system
