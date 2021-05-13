@@ -73,7 +73,7 @@ On a google Cloud Shell terminal, clone this git repository:
 ```
 git clone https://github.com/DnZmfr/realworldapp-app-gke.git
 ```
-Run [realworldapp-app-gke/deploy/prepare.sh](realworldapp-app-gke/deploy/prepare.sh) script to enable some APIs, create a service account and grant required roles in order to perform automated deployments via cloud build
+Then run [deploy/prepare.sh](deploy/prepare.sh) script to enable some APIs, create a service account and grant required roles in order to perform automated deployments via cloud build
 ```
 cd realworldapp-app-gke/deploy
 ./prepare.sh
@@ -132,7 +132,7 @@ cd realworldapp-app-gke/deploy
 ./deploy-mongodb-backup.sh
 ```
 
-Note: to change the cronjob schedule, line number 5 in the [realworldapp-app-gke/deploy/mongodb-cronjob.yaml](realworldapp-app-gke/deploy/mongodb-cronjob.yaml) file must be updated:
+Note: to change the cronjob schedule, line number 5 in the [deploy/mongodb-cronjob.yaml](deploy/mongodb-cronjob.yaml) file must be updated:
 ```
   schedule: "0 12 * * *"
 ```
