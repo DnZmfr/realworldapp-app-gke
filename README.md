@@ -61,10 +61,12 @@ This repository contains the app source code and all the scripts, files and inst
 ```
 #### Architecture diagram
 
+
 ## Prerequisites
 
 * A GCP account
 * A Github account
+
 
 ## Prepare
 
@@ -112,6 +114,7 @@ Cloud Build configuration file location: deploy/cloudbuild/deploy-gke-manual.yam
 Event: Manual invocation  
 Cloud Build configuration file location: deploy/cloudbuild/deploy-monitoring-manual.yaml
 
+
 ## Deploy
 
 #### GKE cluster deployment
@@ -132,10 +135,35 @@ cd realworldapp-app-gke/deploy
 ./deploy-mongodb-backup.sh
 ```
 
-Note: to change the cronjob schedule, line number 5 in the [deploy/mongodb-cronjob.yaml](deploy/mongodb-cronjob.yaml) file must be updated:
+Note: to change the cronjob schedule, line number 6 in the [deploy/mongodb-cronjob.yaml](deploy/mongodb-cronjob.yaml) file must be updated:
 ```
   schedule: "0 12 * * *"
 ```
 
 #### Monitoring deployment (Prometheus, Loki, Grafana)
 On _**Cloud Build**_ -> _**Triggers**_, click on _**RUN**_ button of _**Deploy-MON-Manual**_ trigger and then hit _**RUN TRIGGER**_ button.
+
+
+## Teardown
+From google Cloud Shell terminal
+
+#### Delete Monitoring
+```
+cd realworldapp-app-gke/deploy/terraform/monitoring
+terraform init
+terraform destroy -auto-approve
+```
+
+#### Delete APP Stack
+```
+cd realworldapp-app-gke/deploy/terraform/app
+terraform init
+terraform destroy -auto-approve
+```
+
+#### Delete GKE cluster
+```
+cd realworldapp-app-gke/deploy/terraform/gke
+terraform init
+terraform destroy -auto-approve
+```
