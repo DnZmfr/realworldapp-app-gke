@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains all the scripts, files and instructions necessary to create the Google Cloud Platform (GCP) infrastructure and perform automated [RealWorld fullstack application](https://github.com/layrjs/react-layr-realworld-example-app) kubernetes deployments with terraform. 
+This repository contains the app source code and all the scripts, files and instructions necessary to create the Google Cloud Platform (GCP) infrastructure and perform automated [RealWorld fullstack application](https://github.com/layrjs/react-layr-realworld-example-app) kubernetes deployments with terraform. 
 
 #### Tools & Technologies:
 * [GCP](https://cloud.google.com/) - Google Cloud Platform
