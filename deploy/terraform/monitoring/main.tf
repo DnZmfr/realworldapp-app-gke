@@ -66,6 +66,9 @@ resource "helm_release" "prometheus" {
   chart = "prometheus"
   repository = "https://prometheus-community.github.io/helm-charts"
   namespace = kubernetes_namespace.prometheus.metadata.0.name
+  depends_on = [
+    kubernetes_namespace.prometheus,
+  ]
   version = "11.2.1"
 
   values = [
@@ -73,6 +76,35 @@ resource "helm_release" "prometheus" {
   ]
 }
 
+resource "kubernetes_namespace" "loki_stack" {
+  metadata {
+    name = "loki-stack"
+  }
+}
+
+resource "helm_release" "loki_stack" {
+  name = "loki-stack"
+  chart = "loki-stack"
+  repository = "https://grafana.github.io/loki/charts"
+  namespace = kubernetes_namespace.loki_stack.metadata.0.name
+  depends_on = [
+    kubernetes_namespace.loki_stack,
+  ]
+  version = "2.1.2"
+  set {
+    name = "promtail.enabled"
+    value = true
+  }
+
+  set {
+    name = "loki.persistence.enabled"
+    value = true
+  }
+  set {
+    name = "loki.persistence.size"
+    value = "10Gi"
+  }
+} 
 resource "kubernetes_namespace" "grafana" {
   metadata {
     name = "grafana"
@@ -84,7 +116,11 @@ resource "helm_release" "grafana" {
   chart = "grafana"
   repository = "https://grafana.github.io/helm-charts"
   namespace = kubernetes_namespace.grafana.metadata.0.name
-  depends_on = [helm_release.prometheus]
+  depends_on = [
+    kubernetes_namespace.grafana,
+    helm_release.prometheus,
+    helm_release.loki_stack,
+  ]
   version = "~5.0.24"
 
   values = [

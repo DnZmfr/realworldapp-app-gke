@@ -9,6 +9,11 @@ datasources:
       url: http://prometheus-server.prometheus.svc.cluster.local
       access: proxy
       isDefault: true
+    - name: Loki
+      type: loki
+      url: http://loki-stack.loki-stack:3100
+      access: proxy
+      isDefault: false
 service:
   type: LoadBalancer
 dashboardProviders:
