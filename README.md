@@ -1,6 +1,5 @@
 # Fullstack RealWorld app
 
-[![ci](https://github.com/DnZmfr/spinnaker-canary-demo/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/DnZmfr/spinnaker-canary-demo/actions/workflows/docker-publish.yml)
 
 This repository contains all the scripts, files and instructions necessary to create the Google Cloud Platform (GCP) infrastructure and perform automated [RealWorld fullstack application](https://github.com/layrjs/react-layr-realworld-example-app) kubernetes deployments with terraform. 
 
